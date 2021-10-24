@@ -1,17 +1,22 @@
 const nodemailer = require("nodemailer");
 const CONFIG = require("./config.json"); // simple json object containing "email" and "password" for gmail credentials
-
 const express = require("express");
+const path = require("path");
 const cors = require("cors");
 const app = express();
 const port = 3000;
 
 const corsOptions = {
-  origin: "http://localhost:5000",
+  origin: "http://localhost:" + port,
   methods: "GET, POST",
   optionsSuccessStatus: 200, // For legacy browser support
 };
 
+// add middlewares
+app.use(
+  express.static(path.join(__dirname, "../portfolio-reactjs-frontend", "build"))
+);
+app.use(express.static("public"));
 app.use(
   express.urlencoded({
     extended: true,
@@ -21,7 +26,7 @@ app.use(
 );
 
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 app.get("/about", (req, res) => {
@@ -32,8 +37,8 @@ app.get("/about", (req, res) => {
     lastName: "Lim",
     role: "Full-Stack Developer",
     yoe: "5",
-    image: "../portfolio/src/assets/images/AboutMe.jpg",
-    resume: "https://www.resumemaker.online/es.php", // if no resume, the button will not show up
+    image: "../portfolio-reactjs-frontend/src/assets/images/AboutMe.jpg",
+    resume: "",
     description: "",
     interests: [
       "Space-exploration",
