@@ -1,16 +1,9 @@
+require("dotenv").config();
 const nodemailer = require("nodemailer");
-const CONFIG = require("./config.json"); // simple json object containing "email" and "password" for gmail credentials
 const express = require("express");
 const path = require("path");
 const cors = require("cors");
 const app = express();
-const port = 3000;
-
-const corsOptions = {
-  origin: "http://localhost:" + port,
-  methods: "GET, POST",
-  optionsSuccessStatus: 200, // For legacy browser support
-};
 
 // add middlewares
 app.use(
@@ -21,7 +14,7 @@ app.use(
   express.urlencoded({
     extended: true,
   }),
-  cors(corsOptions),
+  cors(),
   express.json()
 );
 
@@ -309,7 +302,7 @@ app.get("/footer", (req, res) => {
 
 function sendAcknowledgementEmail({ transporter, body, response }) {
   const mailOptionsToVisitor = {
-    from: CONFIG.email,
+    from: process.env.EMAIL,
     to: body.email,
     subject: "[Clare] Message Received",
     html: `<!DOCTYPE html>
@@ -326,7 +319,7 @@ function sendAcknowledgementEmail({ transporter, body, response }) {
               <p>
                 Best Regards,
                 <br />
-                ${CONFIG.name}
+                ${process.env.NAME}
               </p>
             </div>
           </body>
@@ -356,14 +349,14 @@ app.post("/sendEmail", async (req, res) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      user: CONFIG.email,
-      pass: CONFIG.password,
+      user: process.env.EMAIL,
+      pass: process.env.EMAIL_PW,
     },
   });
 
   const mailOptionsToSelf = {
-    from: CONFIG.email,
-    to: CONFIG.email,
+    from: process.env.EMAIL,
+    to: process.env.EMAIL_PW,
     subject: "[Portfolio] Email from " + body.name,
     text: body.message,
   };
@@ -388,6 +381,6 @@ app.post("/sendEmail", async (req, res) => {
   res.send(response);
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}!`);
+app.listen(process.env.PORT, () => {
+  console.log(`Example app listening on port ${process.env.PORT}!`);
 });
