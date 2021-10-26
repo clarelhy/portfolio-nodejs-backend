@@ -5,22 +5,38 @@ const path = require("path");
 const cors = require("cors");
 const app = express();
 
-// add middlewares
-app.use(
-  express.static(path.join(__dirname, "../portfolio-reactjs-frontend", "build"))
-);
-app.use(express.static("public"));
+// add middlewares for prod only
+console.log("[Environment] ", process.env.ENVIRONMENT);
+if (process.env.ENVIRONMENT === "PRODUCTION") {
+  app.use(express.static(path.join(__dirname, ".", "build")));
+  app.use(express.static("public"));
+
+  // for dev, open localhost on port 5000, ignore this
+  app.get("/", (req, res) => {
+    console.log("Serve build folder to client");
+    res.sendFile(path.join(__dirname, "public", "index.html"));
+  });
+}
+
+const portToUse =
+  process.env.ENVIRONMENT === "DEVELOPMENT"
+    ? process.env.WEB_PORT
+    : process.env.APP_PORT;
+
+const corsOptions = {
+  origin: `http://localhost:${portToUse}/`,
+  methods: "GET,POST",
+  preflightContinue: true,
+  optionsSuccessStatus: 200,
+};
+
 app.use(
   express.urlencoded({
     extended: true,
   }),
-  cors(),
+  cors(corsOptions),
   express.json()
 );
-
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
-});
 
 app.get("/about", (req, res) => {
   console.log("[Request -- GET] Received", req.query);
@@ -330,11 +346,13 @@ function sendAcknowledgementEmail({ transporter, body, response }) {
     if (error) {
       console.error(error);
       response.status = "FAILED";
-      response.message = error;
+      response.message = `[Send email to visitor @ ${
+        body.email
+      }]: ${JSON.stringify(error)}`;
 
       return response;
     } else {
-      console.log("Email sent to visitor: " + info.response);
+      console.log(`[Send email to visitor @ ${body.email}]: ${info.response}`);
       response.message = info.response;
 
       return response;
@@ -356,7 +374,7 @@ app.post("/sendEmail", async (req, res) => {
 
   const mailOptionsToSelf = {
     from: process.env.EMAIL,
-    to: process.env.EMAIL_PW,
+    to: process.env.MY_EMAIL, // send email to personal email
     subject: "[Portfolio] Email from " + body.name,
     text: body.message,
   };
@@ -367,20 +385,24 @@ app.post("/sendEmail", async (req, res) => {
     message: "Successfully sent email to visitor 🎈",
   };
 
-  await transporter.sendMail(mailOptionsToSelf, function (error, info) {
+  transporter.sendMail(mailOptionsToSelf, function (error, info) {
     if (error) {
       console.error(error);
       response.status = "FAILED";
-      response.message = error;
+      response.message = `[Send email to self @ ${
+        process.env.MY_EMAIL
+      }]: ${JSON.stringify(error)}`;
+      res.send(response);
     } else {
-      console.log("Email sent to myself: " + info.response);
+      console.log(
+        `[Send email to self @ ${process.env.MY_EMAIL}]: ${info.response}`
+      );
       response = sendAcknowledgementEmail({ transporter, body, response });
+      res.send(response);
     }
   });
-
-  res.send(response);
 });
 
-app.listen(process.env.PORT, () => {
-  console.log(`Example app listening on port ${process.env.PORT}!`);
+app.listen(process.env.APP_PORT, () => {
+  console.log(`React app listening on port ${process.env.APP_PORT}!`);
 });
