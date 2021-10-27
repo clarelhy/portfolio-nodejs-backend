@@ -103,7 +103,7 @@ app.get("/experience", (req, res) => {
       present: true,
       company: "IDEMIA Singapore",
       duration: "0.6 year",
-      role: "Full-Stack Developer",
+      role: "Full-Stack Software Developer",
       scope:
         "Running SCRUM, Angular2+ Web Applications, NodeJS, React Native iOS mobile application for border-control systems in Singapore.",
     },
