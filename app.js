@@ -44,7 +44,7 @@ app.get("/about", (req, res) => {
   const data = {
     name: "Clare",
     lastName: "Lim",
-    role: "Full-Stack Developer",
+    role: "Full-Stack Software Developer",
     yoe: "5",
     image: "../portfolio-reactjs-frontend/src/assets/images/AboutMe.jpg",
     resume: "",
@@ -64,7 +64,7 @@ app.get("/about", (req, res) => {
       "Cloud Tech (AWS etc)",
       "AI/ML",
     ],
-    currentWork: "Full-Stack Developer",
+    currentWork: "Full-Stack Software Developer",
     currentCompany: "IDEMIA Singapore",
     currentCompanyWebsite: "http://idemia.com",
     education:
@@ -233,7 +233,7 @@ app.get("/projects", (req, res) => {
       customer: "PUB",
       devRole: "Full Stack",
       tech: "AngularJS, NodeJS, OpenLayers, 2D GIS Map",
-      year: 2020,
+      yearStart: 2020,
       yearEnd: 2020,
     },
     {
@@ -291,6 +291,7 @@ app.get("/contact", (req, res) => {
   res.send(response);
 });
 
+// not in use
 app.get("/footer", (req, res) => {
   res.set("Access-Control-Allow-Origin", "*");
   const data = {
@@ -320,7 +321,7 @@ function sendAcknowledgementEmail({ transporter, body, response }) {
   const mailOptionsToVisitor = {
     from: process.env.EMAIL,
     to: body.email,
-    subject: "[Clare] Message Received",
+    subject: `[${process.env.NAME}] Message Received`,
     html: `<!DOCTYPE html>
         <html>
           <body>
