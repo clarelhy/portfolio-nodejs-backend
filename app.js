@@ -20,6 +20,7 @@ if (process.env.ENVIRONMENT === "PRODUCTION") {
   });
 }
 
+// comment out if code is intended for controlled environment deployment 
 const corsPortToUse =
   process.env.ENVIRONMENT === "DEVELOPMENT"
     ? process.env.WEB_PORT
@@ -27,7 +28,7 @@ const corsPortToUse =
 
 // for dev only
 const corsOptions = {
-  origin: `http://localhost:${corsPortToUse}`,
+  origin: `http://localhost:${corsPortToUse}`, // change origin if code intended for controlled environment deployment 
   methods: "GET,POST",
   preflightContinue: true,
   optionsSuccessStatus: 200,
