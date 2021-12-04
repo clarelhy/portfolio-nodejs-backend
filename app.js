@@ -3,6 +3,7 @@ const nodemailer = require("nodemailer");
 const express = require("express");
 const path = require("path");
 const cors = require("cors");
+const helmet = require("helmet");
 const app = express();
 
 // add middlewares for prod only
@@ -10,6 +11,7 @@ console.log("[Environment] ", process.env.ENVIRONMENT);
 if (process.env.ENVIRONMENT === "PRODUCTION") {
   app.use(express.static(path.join(__dirname, ".", "build")));
   app.use(express.static("public"));
+  app.use(helmet());
 
   // for dev, open localhost on port 5000, ignore this
   app.get("/", (req, res) => {
@@ -18,13 +20,14 @@ if (process.env.ENVIRONMENT === "PRODUCTION") {
   });
 }
 
-const portToUse =
+const corsPortToUse =
   process.env.ENVIRONMENT === "DEVELOPMENT"
     ? process.env.WEB_PORT
     : process.env.APP_PORT;
 
+// for dev only
 const corsOptions = {
-  origin: `http://localhost:${portToUse}/`,
+  origin: `http://localhost:${corsPortToUse}`,
   methods: "GET,POST",
   preflightContinue: true,
   optionsSuccessStatus: 200,
@@ -38,6 +41,10 @@ app.use(
   express.json()
 );
 
+app.listen(process.env.APP_PORT, () => {
+  console.log(`React app listening on port ${process.env.APP_PORT}!`);
+});
+
 app.get("/about", (req, res) => {
   console.log("[Request -- GET] Received", req.query);
   res.set("Access-Control-Allow-Origin", "*");
@@ -45,7 +52,7 @@ app.get("/about", (req, res) => {
     name: "Clare",
     lastName: "Lim",
     role: "Full-Stack Software Developer",
-    yoe: "5",
+    startWorkDate: "2016/11/01",
     image: "../portfolio-reactjs-frontend/src/assets/images/AboutMe.jpg",
     resume: "",
     description: "",
@@ -90,6 +97,8 @@ app.get("/experience", (req, res) => {
     {
       yearJoined: 2016,
       yearLeft: 2021,
+      joined: "2016/11/01",
+      left: "2021/03/15",
       present: false,
       company: "ST Engineering Electronics",
       duration: "4.5 years",
@@ -100,6 +109,8 @@ app.get("/experience", (req, res) => {
     {
       yearJoined: 2021,
       yearLeft: null,
+      joined: "2021/03/22",
+      lefted: null,
       present: true,
       company: "IDEMIA Singapore",
       duration: "0.6 year",
@@ -119,18 +130,19 @@ app.get("/experience", (req, res) => {
 app.get("/techstack", (req, res) => {
   res.set("Access-Control-Allow-Origin", "*");
   const data = [
-    { tech: "JavaScript", level: 85, yoe: 5 },
-    { tech: "Angular1/2+", level: 80, yoe: 5 },
-    { tech: "2D GIS Map", level: 85, yoe: 5 },
-    { tech: "OpenLayers", level: 75, yoe: 5 },
-    { tech: "C2/C3 Systems", level: 85, yoe: 5 },
-    { tech: "CI/CD", level: 80, yoe: 4 },
-    { tech: "NoSQL", level: 75, yoe: 4 },
-    { tech: "JIRA", level: 75, yoe: 4 },
-    { tech: "GitLab", level: 75, yoe: 4 },
-    { tech: "NodeJS", level: 80, yoe: 3.5 },
-    { tech: "ReactJS/TS", level: 70, yoe: 1 },
-    { tech: "ReactNative", level: 70, yoe: 1 },
+    { tech: "JavaScript", level: 85, start: "2016/11/01" },
+    { tech: "Angular1/2+", level: 80, start: "2016/11/01" },
+    { tech: "2D GIS Map", level: 85, start: "2016/11/01" },
+    { tech: "OpenLayers", level: 75, start: "2016/11/01" },
+    { tech: "C2/C3 Systems", level: 85, start: "2016/11/01" },
+    { tech: "NoSQL", level: 75, start: "2017/02/01" },
+    { tech: "RedMine", level: 70, start: "2017/02/01" },
+    { tech: "CI/CD", level: 80, start: "2017/08/01" },
+    { tech: "JIRA", level: 75, start: "2017/08/01" },
+    { tech: "GitLab", level: 75, start: "2017/08/01" },
+    { tech: "NodeJS", level: 80, start: "2018/01/01" },
+    { tech: "ReactJS/TS", level: 70, start: "2021/05/01" },
+    { tech: "ReactNative", level: 70, start: "2021/05/01" },
   ];
 
   const response = {
@@ -246,24 +258,40 @@ app.get("/projects", (req, res) => {
       yearEnd: 2021,
     },
     {
-      name: "eConsole Web Application (Air/Land/Sea)",
+      name: "eConsole Web Application (Air)",
       domain: "Border Control Operations",
       customer: "ICA",
       devRole: "Full Stack",
       tech: "Angular 11, NodeJS",
       yearStart: 2021,
       yearEnd: null,
-      ongoing: true,
     },
     {
-      name: "eMarshal iOS Application",
+      name: "eConsole Web Application (Land & Sea)",
+      domain: "Border Control Operations",
+      customer: "ICA",
+      devRole: "Full Stack",
+      tech: "Angular 11, NodeJS",
+      yearStart: 2021,
+      yearEnd: null,
+    },
+    {
+      name: "eMarshal iOS Application (Air)",
       domain: "Border Control Operations",
       customer: "ICA",
       devRole: "Full Stack",
       tech: "React Native, NodeJS",
       yearStart: 2021,
       yearEnd: null,
-      ongoing: true,
+    },
+    {
+      name: "eMarshal iOS Application (Land & Sea)",
+      domain: "Border Control Operations",
+      customer: "ICA",
+      devRole: "Full Stack",
+      tech: "React Native, NodeJS",
+      yearStart: 2021,
+      yearEnd: null,
     },
   ];
 
@@ -287,32 +315,6 @@ app.get("/contact", (req, res) => {
     data,
     status: "OK",
     message: "Successfully received contact 🎈",
-  };
-  res.send(response);
-});
-
-// not in use
-app.get("/footer", (req, res) => {
-  res.set("Access-Control-Allow-Origin", "*");
-  const data = {
-    networks: [
-      {
-        id: nanoid(),
-        name: "linkedin",
-        url: "",
-      },
-      {
-        id: nanoid(),
-        name: "github",
-        url: "",
-      },
-    ],
-  };
-
-  const response = {
-    data,
-    status: "OK",
-    message: "Successfully received footer 🎈",
   };
   res.send(response);
 });
@@ -388,7 +390,7 @@ app.post("/sendEmail", async (req, res) => {
 
   transporter.sendMail(mailOptionsToSelf, function (error, info) {
     if (error) {
-      console.error(error);
+      console.error("[transporter.sendMail(mailOptionsToSelf)] Error: ", error);
       response.status = "FAILED";
       response.message = `[Send email to self @ ${
         process.env.MY_EMAIL
@@ -402,8 +404,4 @@ app.post("/sendEmail", async (req, res) => {
       res.send(response);
     }
   });
-});
-
-app.listen(process.env.APP_PORT, () => {
-  console.log(`React app listening on port ${process.env.APP_PORT}!`);
 });
