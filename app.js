@@ -50,7 +50,7 @@ app.get("/about", (req, res) => {
   const data = {
     name: "Clare",
     lastName: "Lim",
-    role: "Full-Stack Software Developer",
+    role: "Full Stack Software Developer",
     startWorkDate: "2016/11/01",
     image: "../portfolio-reactjs-frontend/src/assets/images/AboutMe.jpg",
     resume: "",
@@ -66,11 +66,12 @@ app.get("/about", (req, res) => {
       "React / Vue",
       "JavaScript / TypeScript / Python",
       "UI/UX",
-      "Container Tech (Docker etc)",
+      "Container & Orchestration",
       "Cloud Tech (AWS etc)",
       "AI/ML",
     ],
-    currentWork: "Full-Stack Software Developer",
+    certification: ["SCRUM Master"],
+    currentWork: "Full Stack Software Developer",
     currentCompany: "IDEMIA Singapore",
     currentCompanyWebsite: "http://idemia.com",
     education:
@@ -101,7 +102,7 @@ app.get("/experience", (req, res) => {
       present: false,
       company: "ST Engineering Electronics",
       duration: "4.5 years",
-      role: "Full-Stack Software Engineer",
+      role: "Full Stack Software Engineer",
       scope:
         "2D GIS Map Specialist, Team Lead in Turn-key SCRUM Team, In-house Framework Developer, Ops Monitoring Web Apps with AngularJS/NodeJS, Map Consultant for Pre-sales & BD.",
     },
@@ -109,11 +110,11 @@ app.get("/experience", (req, res) => {
       yearJoined: 2021,
       yearLeft: null,
       joined: "2021/03/22",
-      lefted: null,
+      left: null,
       present: true,
       company: "IDEMIA Singapore",
-      duration: "0.6 year",
-      role: "Full-Stack Software Developer",
+      duration: "0.8 year",
+      role: "Full Stack Software Developer",
       scope:
         "Running SCRUM, Angular2+ Web Applications, NodeJS, React Native iOS mobile application for border-control systems in Singapore.",
     },
@@ -141,7 +142,8 @@ app.get("/techstack", (req, res) => {
     { tech: "GitLab", level: 75, start: "2017/08/01" },
     { tech: "NodeJS", level: 80, start: "2018/01/01" },
     { tech: "ReactJS/TS", level: 70, start: "2021/05/01" },
-    { tech: "ReactNative", level: 70, start: "2021/05/01" },
+    { tech: "React Native", level: 70, start: "2021/05/01" },
+    { tech: "Python", level: 10, start: "2022/01/15" }
   ];
 
   const response = {
