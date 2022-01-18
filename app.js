@@ -70,7 +70,7 @@ app.get("/about", (req, res) => {
       "Cloud Tech (AWS etc)",
       "AI/ML",
     ],
-    certification: ["SCRUM Master"],
+    certifications: ["SCRUM Master"],
     currentWork: "Full Stack Software Developer",
     currentCompany: "IDEMIA Singapore",
     currentCompanyWebsite: "http://idemia.com",
