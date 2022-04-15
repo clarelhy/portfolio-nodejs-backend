@@ -63,11 +63,11 @@ app.get("/about", (req, res) => {
       "Music",
     ],
     techInterests: [
-      "React / Vue",
-      "JavaScript / TypeScript / Python",
+      "Angular / React / Vue",
+      "JavaScript / TypeScript / Python / Java",
       "UI/UX",
+      "Cloud Tech (AWS, Azure etc)",
       "Container & Orchestration",
-      "Cloud Tech (AWS etc)",
       "AI/ML",
     ],
     certifications: ["SCRUM Master"],
@@ -113,7 +113,7 @@ app.get("/experience", (req, res) => {
       left: null,
       present: true,
       company: "IDEMIA Singapore",
-      duration: "0.8 year",
+      duration: "1.1 year",
       role: "Full Stack Software Developer",
       scope:
         "Running SCRUM, Angular2+ Web Applications, NodeJS, React Native iOS mobile application for border-control systems in Singapore.",
@@ -143,7 +143,7 @@ app.get("/techstack", (req, res) => {
     { tech: "NodeJS", level: 80, start: "2018/01/01" },
     { tech: "ReactJS/TS", level: 70, start: "2021/05/01" },
     { tech: "React Native", level: 70, start: "2021/05/01" },
-    { tech: "Python", level: 10, start: "2022/01/15" }
+    { tech: "Python", level: 10, start: "2022/01/15" },
   ];
 
   const response = {
@@ -380,7 +380,7 @@ app.post("/sendEmail", async (req, res) => {
     from: process.env.EMAIL,
     to: process.env.MY_EMAIL, // send email to personal email
     subject: "[Portfolio] Email from " + body.name,
-    text: body.message,
+    text: "[Email Address: " + body.email + "] \n\n" + body.message,
   };
 
   let response = {
