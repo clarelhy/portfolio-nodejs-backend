@@ -379,8 +379,8 @@ app.post("/sendEmail", async (req, res) => {
   const mailOptionsToSelf = {
     from: process.env.EMAIL,
     to: process.env.MY_EMAIL, // send email to personal email
-    subject: "[Portfolio] Email from " + body.name,
-    text: "[Email Address: " + body.email + "] \n\n" + body.message,
+    subject: "[Portfolio] Email from " + body.name + "[" + body.email + "]",
+    text: body.message,
   };
 
   let response = {
